@@ -1,0 +1,74 @@
+int pirsensor = 0;
+unsigned long startMillis;
+unsigned long currentMillis;
+const unsigned long period = 3000;  //3 sek
+const unsigned long hold = 6000;  //6 sek
+int check = 1;
+void setup()
+{
+  Serial.begin(9600);
+  startMillis = millis();  //Startar tíd?
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(2,  INPUT);
+  digitalWrite(13, HIGH);
+  digitalWrite(12, LOW);
+  digitalWrite(11, LOW);
+  
+}
+
+void loop()
+{
+  
+  if (digitalRead(2) == HIGH && check == 1)
+  {
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, HIGH);
+    digitalWrite(11, LOW);
+    check = 2;
+  }
+  if (currentMillis + period < millis() && check == 2)
+  {
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, LOW);
+    digitalWrite(11, LOW);
+    startMillis = millis();
+    check = 3;
+  }
+  if (digitalRead(2) == LOW && currentMillis + period < millis() && check == 3)
+  
+  {
+    check = 1;
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, LOW);
+    digitalWrite(11, HIGH);
+    startMillis = millis();
+    check = 4;
+  }
+if (currentMillis + period < millis() && check == 4 )
+  {
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, LOW);
+    digitalWrite(11, LOW);
+    startMillis = millis();
+    check = 1;
+  }
+  if (digitalRead(2) == HIGH && check == 5)
+  {
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, HIGH);
+    digitalWrite(11, LOW);
+    check = 6;
+    currentMillis = millis();
+  }
+  if (millis() - currentMillis + period > millis() && check == 6)
+  {
+    currentMillis = millis();  //Hvussi leingi hevur programmi koyrt
+    digitalWrite(12, LOW);
+    digitalWrite(11, LOW);
+    startMillis = millis();
+    check = 1;
+  }
+
+}
